@@ -1,23 +1,13 @@
 const webpack = require('webpack');
-const path = require('path');
+const path = require("path");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  // 入口文件
-  devServer: {
-    // dev 开发模式导入public 目录下的文件
-    contentBase: path.join(__dirname, 'public'),
-    historyApiFallback: true,
+  entry: {
+    app: "./src/app.js",
   },
-  entry: './src/app.js',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name]-[chunkhash:8].js',
-  },
-
-  devtool: '#source-map',
   module: {
     rules: [
       {
@@ -62,12 +52,18 @@ module.exports = {
     ]
   },
   plugins: [
+    // new CleanWebpackPlugin(['dist/*']) for < v2 versions of CleanWebpackPlugin
+    new CleanWebpackPlugin(),
     new webpack.DefinePlugin({
-      'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV) },
+      "process.env": { NODE_ENV: JSON.stringify(process.env.NODE_ENV) },
     }),
     new HtmlWebpackPlugin({
-      template: './public/index.html'
+      template: path.join(__dirname, "../public/index.html"),
     }),
-    new MiniCssExtractPlugin({ filename: 'styles.css' }),
+    new MiniCssExtractPlugin({ filename: "styles.css" }),
   ],
-}
+  output: {
+    filename: "[name]-[chunkhash:8].js",
+    path: path.resolve(__dirname, "../dist"),
+  },
+};
