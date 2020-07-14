@@ -1,11 +1,14 @@
-const webpack = require('webpack');
+const webpack = require("webpack");
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+const dev = process.env.NODE_ENV !== "production";
 
 module.exports = {
   entry: {
+    // 入口
     app: "./src/app.js",
   },
   module: {
@@ -15,14 +18,14 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [
-          {loader: 'babel-loader'},
+          { loader: "babel-loader" },
           {
-            loader: 'linaria/loader',
+            loader: "linaria/loader",
             options: {
-              sourceMap: process.env.NODE_ENV !== 'production',
+              sourceMap: dev,
             },
-          }
-        ]
+          },
+        ],
       },
       // {
       //   test: /\.css$/,
@@ -38,29 +41,32 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              hmr: process.env.NODE_ENV !== 'production',
+              hmr: dev,
             },
           },
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
-              sourceMap: process.env.NODE_ENV !== 'production',
+              sourceMap: dev,
             },
           },
         ],
       },
-    ]
+    ],
   },
   plugins: [
     // new CleanWebpackPlugin(['dist/*']) for < v2 versions of CleanWebpackPlugin
     new CleanWebpackPlugin(),
+    // 注入环境变量 dev prod test
     new webpack.DefinePlugin({
       "process.env": { NODE_ENV: JSON.stringify(process.env.NODE_ENV) },
     }),
+    // index.html 注入 js 和 css
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "../public/index.html"),
     }),
-    new MiniCssExtractPlugin({ filename: "styles.css" }),
+    // linaria 生成的 css file
+    new MiniCssExtractPlugin({ filename: "[name]-[chunkhash:8].css" }),
   ],
   output: {
     filename: "[name]-[chunkhash:8].js",

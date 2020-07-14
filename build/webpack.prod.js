@@ -7,7 +7,7 @@ const common = require("./webpack.common.js");
 module.exports = merge(common, {
   mode: "production",
   output: {
-    filename: '[name].[contentHash].bundle.js',
+    filename: "[name].[contentHash:8].bundle.js",
   },
   optimization: {
     minimize: true,
@@ -29,18 +29,22 @@ module.exports = merge(common, {
       }),
     ],
     splitChunks: {
-      chunks: 'all',
+      chunks: "all",
       cacheGroups: {
-        defaultVendors: {
+        // 定义了需要被抽离的模块
+        vendor: {
+          priority: 10,
           test: /[\\/]node_modules[\\/]/,
-          priority: -10
+          name: 'vendor',
+          enforce: true,
+          reuseExistingChunk: true,
         },
         default: {
           minChunks: 2,
           priority: -20,
-          reuseExistingChunk: true
-        }
-      }
-    }
+          reuseExistingChunk: true,
+        },
+      },
+    },
   },
 });
