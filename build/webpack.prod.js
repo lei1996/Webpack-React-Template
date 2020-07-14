@@ -1,10 +1,14 @@
 const webpack = require("webpack");
+const path = require("path");
 const { merge } = require("webpack-merge");
 const TerserPlugin = require("terser-webpack-plugin");
 const common = require("./webpack.common.js");
 
 module.exports = merge(common, {
   mode: "production",
+  output: {
+    filename: '[name].[contentHash].bundle.js',
+  },
   optimization: {
     minimize: true,
     minimizer: [
@@ -24,5 +28,19 @@ module.exports = merge(common, {
         },
       }),
     ],
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    }
   },
 });
