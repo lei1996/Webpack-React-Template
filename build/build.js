@@ -28,7 +28,8 @@ webpack(WebpackConfig, function (err, stats) {
   console.log(
     chalk.yellow(
       `  Tip: built files are meant to be served over an HTTP server.\n
-          Opening index.html over file:// won't work.\n`
+      If you no't http server container.  command 'npm i -g serve && serve ./dist' 
+       Then Opening Browser on http://localhost:5000/ . \n`
     )
   );
   process.exit(); // 终止终端进程

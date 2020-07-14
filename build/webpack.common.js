@@ -52,6 +52,43 @@ module.exports = {
           },
         ],
       },
+      // 处理图片资源的 loader
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              name: path.posix.join("", "img/[name].[hash:8].[ext]"),
+              limit: 4000,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              name: path.posix.join("", "media/[name].[hash:8].[ext]"),
+              limit: 5000,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              name: path.posix.join("", "fonts/[name].[hash:8].[ext]"),
+              limit: 5000,
+            },
+          },
+        ],
+      },
     ],
   },
   plugins: [
@@ -66,10 +103,10 @@ module.exports = {
       template: path.join(__dirname, "../public/index.html"),
     }),
     // linaria 生成的 css file
-    new MiniCssExtractPlugin({ filename: "[name]-[chunkhash:8].css" }),
+    new MiniCssExtractPlugin({ filename: "[name].css" }),
   ],
   output: {
-    filename: "[name]-[chunkhash:8].js",
+    filename: "[name]-[hash:8].js",
     path: path.resolve(__dirname, "../dist"),
   },
 };
