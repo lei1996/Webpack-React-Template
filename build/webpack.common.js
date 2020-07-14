@@ -9,7 +9,7 @@ const dev = process.env.NODE_ENV !== "production";
 module.exports = {
   entry: {
     // 入口
-    app: "./src/app.js",
+    app: "./src/index.js",
   },
   module: {
     rules: [
