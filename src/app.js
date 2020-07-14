@@ -7,6 +7,8 @@ const header = css`
 font-size: 96px;
 `;
 
+console.log('dev模式才会显示该console.log');
+
 const App = () => {
   return (
     <h1 className={header}>Hello from react</h1>

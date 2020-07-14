@@ -4,7 +4,7 @@ const common = require("./webpack.common.js");
 
 module.exports = merge(common, {
   mode: "development",
-  devtool: "inline-source-map",
+  devtool: '#cheap-module-eval-source-map',
   // 入口文件
   devServer: {
     // dev 开发模式导入public 目录下的文件
