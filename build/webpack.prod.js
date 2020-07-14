@@ -1,5 +1,6 @@
 const webpack = require("webpack");
 const path = require("path");
+const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const { merge } = require("webpack-merge");
 const TerserPlugin = require("terser-webpack-plugin");
 const common = require("./webpack.common.js");
@@ -27,6 +28,12 @@ module.exports = merge(common, {
           },
         },
       }),
+      // 压缩css
+      new OptimizeCSSAssetsPlugin({
+        cssProcessorOptions: {
+          discardComments: { removeAll: true }, // 移除注释
+        },
+      }),
     ],
     splitChunks: {
       chunks: "all",
@@ -35,7 +42,7 @@ module.exports = merge(common, {
         vendor: {
           priority: 10,
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendor',
+          name: "vendor",
           enforce: true,
           reuseExistingChunk: true,
         },
