@@ -1,10 +1,15 @@
 import React from 'react';
 import reactDOM from 'react-dom';
-import './styles/style.scss';
+import { css } from 'linaria';
+// import './styles/style.scss';
+
+const header = css`
+font-size: 96px;
+`;
 
 const App = () => {
   return (
-    <h1>Hello from react</h1>
+    <h1 className={header}>Hello from react</h1>
   )
 }
 
