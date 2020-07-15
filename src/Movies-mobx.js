@@ -13,7 +13,7 @@ export const MoviesStore = () => {
 				`http://www.omdbapi.com/?s=action&page=${page}&apikey=4640ef30`
 			);
 			const mock = await fetch(
-				`http://localhost:5000/posts`
+				`/api/posts`
 			);
 			console.log(mock);
 			const newMovies = await res.json();

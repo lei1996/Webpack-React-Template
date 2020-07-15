@@ -13,6 +13,13 @@ module.exports = merge(common, {
     publicPath: "/", // 访问资源加前缀
     proxy: {
       // 接口请求代理
+      '/api': {
+        // target: 'http://test.admin.hkgc1688.com/api',
+        target: 'http://localhost:5000',
+        secure: false,
+        changeOrigin: true,
+        pathRewrite: { '^/api': '' },
+      },
     },
     hot: true,
     contentBase: false, // 告诉服务器从哪里提供内容。只有在你想要提供静态文件时才需要
