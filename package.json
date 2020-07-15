@@ -8,12 +8,39 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --open --config ./build/webpack.dev.js",
+    "start": "concurrently \"npm run backend\" \"npm run serve\"",
+    "serve": "webpack-dev-server --open --config ./build/webpack.dev.js",
     "build": "cross-env NODE_ENV=production node build/build.js",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "backend": "json-server --watch db.json --port 5000 --delay=500"
   },
   "author": "",
   "license": "ISC",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "automock": false,
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "setupFiles": [
+      "<rootDir>/src/setupJest.js"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
+  },
   "devDependencies": {
     "@babel/core": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
@@ -54,18 +81,5 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "regenerator-runtime": "^0.13.5"
-  },
-  "jest": {
-    "automock": false,
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "setupFiles": [
-      "<rootDir>/src/setupJest.js"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
-    ]
   }
 }

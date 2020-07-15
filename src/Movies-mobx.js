@@ -12,6 +12,10 @@ export const MoviesStore = () => {
 			const res = await fetch(
 				`http://www.omdbapi.com/?s=action&page=${page}&apikey=4640ef30`
 			);
+			const mock = await fetch(
+				`http://localhost:5000/posts`
+			);
+			console.log(mock);
 			const newMovies = await res.json();
 			// 获取分页数据时，新增到数组
 			store.movies.unshift(...newMovies.Search.map(m => ({ ...m, score: 0 })));
