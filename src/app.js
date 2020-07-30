@@ -1,12 +1,16 @@
 import React, { useContext } from "react";
 import { Router, Link } from "@reach/router";
 
+// import Spring from './spring';
+
 const Home = () => (
   <div>
     <h1>Home测试路由</h1>
     <nav>
       <Link to="/">Home</Link> | <Link to="dashboard">Dashboard</Link>
     </nav>
+
+    {/* <Spring /> */}
   </div>
 );
 
