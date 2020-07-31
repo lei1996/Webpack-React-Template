@@ -5,6 +5,14 @@ import { useObserver } from "mobx-react-lite";
 
 import { AppProvider, AppContext } from "./appStore";
 
+const RouteNavs = () => {
+  return (
+    <>
+      <Link to="/">Home</Link> | <Link to="/chat">Chat</Link>
+    </>
+  );
+};
+
 const Count = () => {
   const { counterProvider } = useContext(AppContext);
 
@@ -47,9 +55,12 @@ function App() {
   return (
     // 全局注入context 就可以不用一层一层 传递store 里面的 属性 或 方法
     <AppContext.Provider value={store}>
-      <Count />
-      <Movie />
-      <Movie2 />
+      <RouteNavs />
+
+      <Router>
+        <Count path="/" />
+        <Movie path="/chat" />
+      </Router>
     </AppContext.Provider>
   );
 }
