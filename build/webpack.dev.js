@@ -7,6 +7,7 @@ module.exports = merge(common, {
   devtool: "#cheap-module-eval-source-map",
   // 入口文件
   devServer: {
+    host: '0.0.0.0',
     // dev 开发模式导入public 目录下的文件
     contentBase: path.join(__dirname, "public"),
     historyApiFallback: true,
