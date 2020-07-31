@@ -4,12 +4,16 @@ const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const { merge } = require("webpack-merge");
 const TerserPlugin = require("terser-webpack-plugin");
 const common = require("./webpack.common.js");
+const WorkboxPlugin = require("workbox-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
 
 module.exports = merge(common, {
   mode: "production",
   output: {
-    filename: "[name].[contentHash:8].bundle.js",
+    filename: "[name].[hash:8].bundle.js",
   },
+  devtool: false,
   optimization: {
     minimize: true,
     minimizer: [
@@ -54,4 +58,18 @@ module.exports = merge(common, {
       },
     },
   },
+  plugins: [
+    // services worker 插件 用于强缓存
+    new WorkboxPlugin.GenerateSW({
+      // these options encourage the ServiceWorkers to get in there fast
+      // and not allow any straggling "old" SWs to hang around
+      clientsClaim: true,
+      skipWaiting: true,
+    }),
+  ],
 });
+
+// if (config.build.bundleAnalyzerReport) {
+//   // 分析应用包大小
+//   new BundleAnalyzerPlugin();
+// }
