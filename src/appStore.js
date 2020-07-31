@@ -1,9 +1,9 @@
 import React, { createContext } from "react";
 import { useLocalStore } from "mobx-react-lite";
 
-export const appContext = createContext();
+export const AppContext = createContext();
 
-const CounterProvider = () => {
+export const CounterProvider = () => {
   const store = useLocalStore(() => ({
     count: 1,
     increment: () => {
@@ -16,26 +16,24 @@ const CounterProvider = () => {
   return store;
 };
 
-const MoviesProvider = () => {
+export const MoviesProvider = () => {
   const store = useLocalStore(() => ({
     movies: 12,
     increment: () => {
       store.movies++;
-      console.log(store.movies);
     },
     decrement: () => {
       store.movies--;
-      console.log(store.movies);
     },
   }));
   return store;
 };
 
-export const AppProvider = ({ children }) => {
+export const AppProvider = () => {
   const store = {
     counterProvider: new CounterProvider(),
     moviesProvider: new MoviesProvider(),
   };
 
-  return <appContext.Provider value={store}>{children}</appContext.Provider>;
+  return store;
 };

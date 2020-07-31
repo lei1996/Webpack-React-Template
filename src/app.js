@@ -3,10 +3,10 @@ import { Router, Link } from "@reach/router";
 import { css } from "linaria";
 import { useObserver } from "mobx-react-lite";
 
-import { AppProvider, appContext } from "./appStore";
+import { AppProvider, AppContext } from "./appStore";
 
 const Count = () => {
-  const { counterProvider } = useContext(appContext);
+  const { counterProvider } = useContext(AppContext);
 
   return useObserver(() => (
     <div>
@@ -18,7 +18,19 @@ const Count = () => {
 };
 
 const Movie = () => {
-  const { moviesProvider } = useContext(appContext);
+  const { moviesProvider } = useContext(AppContext);
+
+  return useObserver(() => (
+    <div>
+      <h2>Movies: {moviesProvider.movies}</h2>
+      <button onClick={moviesProvider.increment}>+</button>
+      <button onClick={moviesProvider.decrement}>-</button>
+    </div>
+  ));
+};
+
+const Movie2 = () => {
+  const { moviesProvider } = useContext(AppContext);
 
   return useObserver(() => (
     <div>
@@ -30,12 +42,15 @@ const Movie = () => {
 };
 
 function App() {
+  const store = AppProvider();
+
   return (
     // 全局注入context 就可以不用一层一层 传递store 里面的 属性 或 方法
-    <AppProvider>
+    <AppContext.Provider value={store}>
       <Count />
       <Movie />
-    </AppProvider>
+      <Movie2 />
+    </AppContext.Provider>
   );
 }
 

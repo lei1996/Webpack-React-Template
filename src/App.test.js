@@ -1,103 +1,25 @@
 // 获取 MoviesStore 实例对象
-import { MoviesStore } from "./Movies-mobx.js";
-// import { act, renderHook } from "@testing-library/react-hooks";
+import { CounterProvider } from "./appStore";
+import { act, renderHook } from "@testing-library/react-hooks";
 
-const mockMovies = {
-	Search: [
-		{
-			imdbID: 0,
-			score: 0
-		},
-		{
-			imdbID: 1,
-			score: 0
-		},
-		{
-			imdbID: 2,
-			score: 0
-		},
-		{
-			imdbID: 3,
-			score: 0
-		},
-		{
-			imdbID: 4,
-			score: 0
-		}
-	]
-};
+describe("count 用例", () => {
+  it("初始化 Counter 对象，校验初始值是否为1", () => {
+    // 获取 store 实例对象
+    const { result } = renderHook(() => CounterProvider());
+    expect(result.current.count).toEqual(1);
+  });
 
-const mockMoviesPage2 = {
-	Search: [
-		{
-			imdbID: 5,
-			score: 0
-		},
-		{
-			imdbID: 6,
-			score: 0
-		}
-	]
-};
+  it("在初始化值为1的情况下，自增1", () => {
+    const { result } = renderHook(() => CounterProvider());
 
-fetch.mockResponse(req => {
-	switch (req.url) {
-		case "http://www.omdbapi.com/?s=action&page=1&apikey=4640ef30":
-			return Promise.resolve(JSON.stringify(mockMovies));
-		case "http://www.omdbapi.com/?s=action&page=2&apikey=4640ef30":
-			return Promise.resolve(JSON.stringify(mockMoviesPage2));
-		default:
-			return Promise.reject("bad url");
-	}
-});
+    act(() => result.current.increment());
+    expect(result.current.count).toEqual(2);
+  });
 
-describe("useMovies hook", () => {
-	it("should render hook and expose an API", () => {
-		// 获取 store 实例对象
-		const store = MoviesStore();
-		expect(store.movies).toEqual([]);
-		expect(store.queue).toEqual([]);
-		expect(typeof store.like).toBe("function");
-		expect(typeof store.dislike).toBe("function");
-		expect(typeof store.addToQueue).toBe("function");
-		expect(typeof store.fetchAll).toBe("function");
-	});
+  it("在初始化值为1的情况下，减 1", () => {
+    const { result } = renderHook(() => CounterProvider());
 
-	it("should fetch a list of movies", async () => {
-		const store = MoviesStore();
-		await store.fetchAll();
-		expect(store.movies).toEqual(mockMovies.Search);
-	});
-
-	it("should fetch another page of movies", async () => {
-		const store = MoviesStore();
-		await store.fetchAll();
-    await store.fetchAll();
-    console.log(store.movies);
-		expect(store.movies).toEqual([
-			...mockMoviesPage2.Search,
-			...mockMovies.Search
-		]);
-	});
-
-	it("将movies 推入 queue 数组", async () => {
-		const store = MoviesStore();
-		await store.fetchAll();
-		store.addToQueue(store.movies[4]);
-		expect(store.queue).toEqual([store.movies[4]]);
-	});
-
-	it("should allow us to like a movie", async () => {
-		const store = MoviesStore();
-		await store.fetchAll();
-		store.like(store.movies[4]);
-		expect(store.movies.map(m => m.score)).toEqual([0, 0, 0, 0, 1]);
-	});
-
-	it("should allow us to dislike a movie", async () => {
-		const store = MoviesStore();
-		await store.fetchAll();
-		store.dislike(store.movies[4]);
-		expect(store.movies.map(m => m.score)).toEqual([0, 0, 0, 0, -1]);
-	});
+    act(() => result.current.decrement());
+    expect(result.current.count).toEqual(0);
+  });
 });
