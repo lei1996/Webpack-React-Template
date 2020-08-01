@@ -1,14 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Router, Link } from "@reach/router";
 import { css } from "linaria";
-import { useObserver } from "mobx-react-lite";
+import { useObserver, observer, useLocalStore } from "mobx-react-lite";
 
 import { AppProvider, AppContext } from "./appStore";
 
 const RouteNavs = () => {
   return (
     <>
-      <Link to="/">Home</Link> | <Link to="/chat">Chat</Link>
+      <Link to="/">Home</Link> | <Link to="/chat">Chat</Link> |{" "}
+      <Link to="/messages">Messages</Link>
     </>
   );
 };
@@ -21,6 +22,7 @@ const Count = () => {
       <h2>Count: {counterProvider.count}</h2>
       <button onClick={counterProvider.increment}>+</button>
       <button onClick={counterProvider.decrement}>-</button>
+      <Counter1 initialCount={111} />
     </div>
   ));
 };
@@ -49,6 +51,47 @@ const Movie2 = () => {
   ));
 };
 
+const Messages = () => {
+  const { messagesListProvider } = useContext(AppContext);
+
+  useEffect(() => {
+    messagesListProvider.addMessages("d111", {
+      id: "1",
+      content: "你是水水水水asd",
+    });
+  }, []);
+  // messages
+  // findMessages
+  // addMessages
+  // updateMessage
+  // deleteMessage
+
+  return useObserver(() => (
+    <div>
+      {messagesListProvider.findMessages("d111").map((m) => (
+        <div key={m.id}>{m.content}</div>
+      ))}
+      {/* <button onClick={}>Send</button> */}
+    </div>
+  ));
+};
+
+export const Counter1 = observer(props => {
+  const store = useLocalStore(() => ({
+    count: props.initialCount,
+    inc() {
+      store.count += 1
+    },
+  }))
+
+  return (
+    <div>
+      <span>{store.count}</span>
+      <button onClick={store.inc}>Increment</button>
+    </div>
+  )
+})
+
 function App() {
   const store = AppProvider();
 
@@ -60,6 +103,7 @@ function App() {
       <Router>
         <Count path="/" />
         <Movie path="/chat" />
+        <Messages path="/messages" />
       </Router>
     </AppContext.Provider>
   );
