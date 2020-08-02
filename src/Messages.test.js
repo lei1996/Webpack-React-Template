@@ -3,15 +3,16 @@ import { MessagesListProvider } from "./appStore";
 import { act, renderHook } from "@testing-library/react-hooks";
 
 describe("消息列表 用例 Map<id, array>数据结构", () => {
-  // deleteMessage
-
   let result;
   beforeEach(() => {
     result = renderHook(() => MessagesListProvider());
     act(() =>
-      result.result.current.addMessages("d000", {
-        id: "a0",
-        content: "vvvvvv",
+      result.result.current.addMessages({
+        id: "d000",
+        message: {
+          id: "a0",
+          content: "vvvvvv",
+        },
       })
     );
   });
@@ -26,9 +27,12 @@ describe("消息列表 用例 Map<id, array>数据结构", () => {
 
   it("push 消息进messages，判断是否为true", () => {
     act(() =>
-      result.result.current.addMessages("d111", {
-        id: "a1",
-        content: "我知道我asdasd放",
+      result.result.current.addMessages({
+        id: "d111",
+        message: {
+          id: "a1",
+          content: "我知道我asdasd放",
+        },
       })
     );
     expect(result.result.current.messages.has("d111")).toEqual(true);
@@ -47,13 +51,13 @@ describe("消息列表 用例 Map<id, array>数据结构", () => {
   });
 
   it("测试 existMessage func 是否正常运行", () => {
-    const messages = result.result.current.existMessage("d000", {
-      content: "vvvvvv",
-      id: "a0",
+    const messages = result.result.current.existMessage({
+      id: "d000",
+      messageId: "a0",
     });
-    const notFindMessage = result.result.current.existMessage("d111", {
-      content: "vvvvb",
-      id: "dss",
+    const notFindMessage = result.result.current.existMessage({
+      id: "d111",
+      messageId: "dss",
     });
     expect(messages.length).toEqual(2);
     expect(notFindMessage.length).toEqual(2);
@@ -65,9 +69,12 @@ describe("消息列表 用例 Map<id, array>数据结构", () => {
 
   it("测试 updateMessage func 是否正常运行", () => {
     act(() =>
-      result.result.current.updateMessage("d000", {
-        content: "更新后的值",
-        id: "a0",
+      result.result.current.updateMessage({
+        id: "d000",
+        message: {
+          content: "更新后的值",
+          id: "a0",
+        },
       })
     );
     const messages = result.result.current.findMessages("d000");
@@ -78,10 +85,7 @@ describe("消息列表 用例 Map<id, array>数据结构", () => {
 
   it("测试 deleteMessage func 删除某一条消息", () => {
     act(() =>
-      result.result.current.deleteMessage("d000", {
-        content: "vvvvvv",
-        id: "a0",
-      })
+      result.result.current.deleteMessage({ id: "d000", messageId: "a0" })
     );
     const messages = result.result.current.findMessages("d000");
     expect(messages.length).toEqual(0);

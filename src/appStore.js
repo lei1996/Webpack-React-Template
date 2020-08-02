@@ -37,28 +37,31 @@ export const MessagesListProvider = () => {
       return store.messages.get(id) || [];
     },
     // 查找 message 位置
-    existMessage: (id, message) => {
+    existMessage: ({ id, messageId }) => {
       const messageList = store.findMessages(id);
-      const index = messageList.findIndex(m => m.id === message.id)
+      const index = messageList.findIndex((m) => m.id === messageId);
       return [index, messageList];
     },
     // 往目标 id 添加消息
-    addMessages: (id, message) => {
+    addMessages: ({ id, message }) => {
       const messageList = store.findMessages(id);
       messageList.push(message);
       store.messages.set(id, messageList);
     },
     // 更新某一条消息
-    updateMessage: (id, message) => {
-      const [index, messageList] = store.existMessage(id, message);
+    updateMessage: ({ id, message }) => {
+      const [index, messageList] = store.existMessage({
+        id,
+        messageId: message.id,
+      });
       if (index !== -1) {
         messageList[index] = message;
         store.messages.set(id, messageList);
       }
     },
     // 删除某一条消息
-    deleteMessage: (id, message) => {
-      const [index, messageList] = store.existMessage(id, message);
+    deleteMessage: ({ id, messageId }) => {
+      const [index, messageList] = store.existMessage({ id, messageId });
       if (index !== -1) {
         messageList.splice(index, 1);
         store.messages.set(id, messageList);
@@ -67,8 +70,6 @@ export const MessagesListProvider = () => {
   }));
   return store;
 };
-
-
 
 export const AppProvider = () => {
   const store = {
