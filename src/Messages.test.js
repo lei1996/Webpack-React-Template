@@ -92,4 +92,11 @@ describe("消息列表 用例 Map<id, array>数据结构", () => {
     expect(messages).toEqual([]);
     expect(messages).not.toEqual([{ content: "vvvvvv", id: "a0" }]);
   });
+
+  it("测试 clear func 清空状态，用于退出登录", () => {
+    act(() =>
+      result.result.current.clear()
+    );
+    expect(result.result.current.messages.size).toEqual(0);
+  });
 });
