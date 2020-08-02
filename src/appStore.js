@@ -81,10 +81,10 @@ export const DarftsProvider = () => {
     darfts: {},
     // 获取某一条文本，本身为''或者找不到都返回 ''
     getDarft: (id) => {
-      return store.darfts[id] || '';
+      return store.darfts[id] || "";
     },
     // 缓存某一个会话的输入草稿
-    setDarft: ({id, text}) => {
+    setDarft: ({ id, text }) => {
       store.darfts[id] = text;
     },
     // 初始化darfts
@@ -95,10 +95,71 @@ export const DarftsProvider = () => {
   return store;
 };
 
+// 用户信息 商店
+// 需要调用 登出 函数
+// 或者将业务逻辑丢到 services 层，mobx 层只缓存基础数据，不做业务逻辑的处理，保持 store 的干净
+export const UserProvider = () => {
+  const user = {
+    userId: "", // 用户Id
+    username: "", // 用户名
+    token: "", // 用户登录token
+    avator: "", // 用户头像
+    tag: "", // 用户tag标签
+    expiryTime: "", // token过期时间
+    isAdmin: false, // 判断是否为管理员
+  };
+
+  const store = useLocalStore(() => ({
+    // 这里需要 对象解构 出值 对象是引用类型
+    user: { ...user },
+    // 设置 key value 没有的key 直接 return 出去
+    setValue: ({ key, value }) => {
+      if (!store.user[key]) return;
+      store.user[key] = value;
+    },
+    // 设置user 对象
+    setUser: (user) => {
+      const {
+        userId,
+        username,
+        token,
+        avator,
+        tag,
+        expiryTime,
+        isAdmin,
+      } = user;
+
+      store.user = {
+        userId: userId || store.user.userId,
+        username: username || store.user.username,
+        token: token || store.user.token,
+        avator: avator || store.user.avator,
+        tag: tag || store.user.tag,
+        expiryTime: expiryTime || store.user.expiryTime,
+        isAdmin: isAdmin || store.user.isAdmin,
+      };
+    },
+    // 判断 token 是否过期
+    // true 表示token 有效
+    isValidToken: () => {
+      if (store.user.expiryTime === "") return false;
+      let time = new Date().getTime() / 1000 | 1;
+      return store.user.expiryTime > time ? true : false;
+    },
+    // 初始化user
+    clear: () => {
+      store.user = user;
+    },
+  }));
+
+  return store;
+};
+
 export const AppProvider = () => {
   const store = {
     counterProvider: new CounterProvider(),
     moviesProvider: new MoviesProvider(),
+    userProvider: new UserProvider(),
     messagesListProvider: new MessagesListProvider(),
     darftsProvider: new DarftsProvider(),
   };
