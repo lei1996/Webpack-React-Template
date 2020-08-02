@@ -143,12 +143,46 @@ export const UserProvider = () => {
     // true 表示token 有效
     isValidToken: () => {
       if (store.user.expiryTime === "") return false;
-      let time = new Date().getTime() / 1000 | 1;
+      let time = (new Date().getTime() / 1000) | 1;
       return store.user.expiryTime > time ? true : false;
     },
     // 初始化user
     clear: () => {
       store.user = user;
+    },
+  }));
+
+  return store;
+};
+
+export const ThemeProvider = () => {
+  const theme = {
+    backgroundColor: "", // 背景色
+    backgroundImage: "", // 背景图
+    sound: "", // 消息提示声
+  };
+
+  const store = useLocalStore(() => ({
+    // 这里需要 对象解构 出值 对象是引用类型
+    theme: { ...theme },
+    // 设置 key value 没有的key 直接 return 出去
+    setValue: ({ key, value }) => {
+      if (!store.theme[key]) return;
+      store.theme[key] = value;
+    },
+    // 设置theme 对象
+    setTheme: (theme) => {
+      const { backgroundColor, backgroundImage, sound } = theme;
+
+      store.theme = {
+        backgroundColor: backgroundColor || store.theme.backgroundColor,
+        backgroundImage: backgroundImage || store.theme.backgroundImage,
+        sound: sound || store.theme.sound,
+      };
+    },
+    // 初始化theme
+    clear: () => {
+      store.theme = theme;
     },
   }));
 
@@ -162,6 +196,7 @@ export const AppProvider = () => {
     userProvider: new UserProvider(),
     messagesListProvider: new MessagesListProvider(),
     darftsProvider: new DarftsProvider(),
+    ThemeProvider: new ThemeProvider(),
   };
 
   return store;
