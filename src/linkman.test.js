@@ -30,13 +30,36 @@ describe("Linkmans 用例", () => {
         avatar: config.cdnPath + "avator/1111.jpg",
         lastTime: "111111",
       });
+      result.result.current.addLinkman({
+        id: "444444",
+        type: "group",
+        unread: 333,
+        name: "11",
+        avatar: config.cdnPath + "avator/dd.jpg",
+        lastTime: "ccc",
+      });
+      result.result.current.addLinkman({
+        id: "0876",
+        type: "friend",
+        unread: 25,
+        name: "xcvv2",
+        avatar: config.cdnPath + "avator/zzz.jpg",
+        lastTime: "ccxz",
+      });
+      result.result.current.addLinkman({
+        id: "66667",
+        type: "friend",
+        unread: 221,
+        name: "ssaxa",
+        avatar: config.cdnPath + "avator/zccvvvvzz.jpg",
+        lastTime: "cbbnncxz",
+      });
     });
   });
 
   it("校验linkman 对象, 判断初始化是否成功", () => {
     const linkman = result.result.current.existLinkman("123123123");
     const linkman1 = result.result.current.existLinkman("d111");
-    expect(linkman[0]).toBe(0);
     expect(linkman[1]).toEqual({
       id: "123123123",
       type: "friend",
@@ -62,17 +85,29 @@ describe("Linkmans 用例", () => {
       });
     });
 
-    expect(result.result.current.linkmans).toEqual([
-      {
-        id: "123123123",
-        type: "group",
-        unread: 1,
-        name: "ccc",
-        avatar: config.cdnPath + "avator/ccc.jpg",
-        creator: "111",
-        lastTime: "3333",
-      },
-    ]);
+    const [, linkman] = result.result.current.existLinkman("123123123");
+
+    expect(linkman).toEqual({
+      id: "123123123",
+      type: "group",
+      unread: 1,
+      name: "ccc",
+      avatar: config.cdnPath + "avator/ccc.jpg",
+      creator: "111",
+      lastTime: "3333",
+    });
+  });
+
+  it("moveTop 将数组元素移动到顶部", () => {
+    act(() => {
+      result.result.current.moveTop('444444');
+    });
+
+    const [index] = result.result.current.existLinkman("444444");
+    const [index1] = result.result.current.existLinkman("66667");
+
+    expect(index).toBe(0);
+    expect(index1).toBe(1);
   });
 
   it("clearUreadCount 清空消息读数 ", () => {
@@ -80,16 +115,16 @@ describe("Linkmans 用例", () => {
       result.result.current.clearUreadCount("123123123");
     });
 
-    expect(result.result.current.linkmans).toEqual([
-      {
-        id: "123123123",
-        type: "friend",
-        unread: 0,
-        name: "222",
-        avatar: config.cdnPath + "avator/1111.jpg",
-        lastTime: "111111",
-      },
-    ]);
+    const [, linkman] = result.result.current.existLinkman("123123123");
+
+    expect(linkman).toEqual({
+      id: "123123123",
+      type: "friend",
+      unread: 0,
+      name: "222",
+      avatar: config.cdnPath + "avator/1111.jpg",
+      lastTime: "111111",
+    });
   });
 
   it("deleteLinkman 删除某个联系人 ", () => {
@@ -97,7 +132,9 @@ describe("Linkmans 用例", () => {
       result.result.current.deleteLinkman("123123123");
     });
 
-    expect(result.result.current.linkmans).toEqual([]);
+    const linkman = result.result.current.existLinkman("123123123");
+
+    expect(linkman).toEqual([-1, []]);
   });
 
   it("clear 还原初始化", () => {

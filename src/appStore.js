@@ -226,6 +226,20 @@ export const LinkmansProvider = () => {
         store.linkmans.splice(index, 1);
       }
     },
+    // 将数组元素移动到顶部
+    moveTop: (id) => {
+      const n = store.linkmans.length;
+      const [index] = store.existLinkman(id);
+
+      if (index > 0 && index > n - 1) return;
+
+      for (let i = index - 1, curr = index; i >= 0; i--) {
+        [store.linkmans[curr--], store.linkmans[i]] = [
+          store.linkmans[i],
+          store.linkmans[curr],
+        ];
+      }
+    },
     // 清空对应的 uread 归零表示消息已读
     clearUreadCount: (id) => {
       const [index, linkman] = store.existLinkman(id);
