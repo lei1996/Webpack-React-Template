@@ -48,6 +48,11 @@ export const MessagesListProvider = () => {
       messageList.push(message);
       store.messages.set(id, messageList);
     },
+    // 返回会话id 最后一条消息
+    lastMessage: (id) => {
+      const messageList = store.findMessages(id);
+      return messageList.length > 0 ? messageList[messageList.length - 1] : {};
+    },
     // 更新某一条消息
     updateMessage: ({ id, message }) => {
       const [index, messageList] = store.existMessage({
@@ -155,6 +160,7 @@ export const UserProvider = () => {
   return store;
 };
 
+// 主题 商店
 export const ThemeProvider = () => {
   const theme = {
     backgroundColor: "", // 背景色
@@ -189,11 +195,59 @@ export const ThemeProvider = () => {
   return store;
 };
 
+// 联系人列表
+// 有群组消息，好友消息  会话id
+// 手写排序 根据lastmessageTime 排序数组 (为了方便引入 react-spring 的那个动画库)
+// type friend group 用于区分群组或者好友
+// uread 未读消息数
+// to 发送消息的Id avator 头像 name 名称 lastTime 最后一条消息的时间
+export const LinkmansProvider = () => {
+  const store = useLocalStore(() => ({
+    // 这里需要 对象解构 出值 对象是引用类型
+    linkmans: [],
+    // 查找 linkman 联系人 位置
+    existLinkman: (id) => {
+      const index = store.linkmans.findIndex((l) => l.id === id);
+      return [index, store.linkmans[index] || []];
+    },
+    // 添加/更新 联系人
+    addLinkman: (linkman) => {
+      const [index] = store.existLinkman(linkman.id);
+      if (index !== -1) {
+        store.linkmans[index] = linkman;
+      } else {
+        store.linkmans.unshift(linkman);
+      }
+    },
+    // 删除某个联系人
+    deleteLinkman: (id) => {
+      const [index] = store.existLinkman(id);
+      if (index !== -1) {
+        store.linkmans.splice(index, 1);
+      }
+    },
+    // 清空对应的 uread 归零表示消息已读
+    clearUreadCount: (id) => {
+      const [index, linkman] = store.existLinkman(id);
+      if (index !== -1) {
+        store.linkmans[index] = { ...linkman, unread: 0 };
+      }
+    },
+    // 初始化linkmans
+    clear: () => {
+      store.linkmans = [];
+    },
+  }));
+
+  return store;
+};
+
 export const AppProvider = () => {
   const store = {
     counterProvider: new CounterProvider(),
     moviesProvider: new MoviesProvider(),
     userProvider: new UserProvider(),
+    LinkmansProvider: new LinkmansProvider(),
     messagesListProvider: new MessagesListProvider(),
     darftsProvider: new DarftsProvider(),
     ThemeProvider: new ThemeProvider(),

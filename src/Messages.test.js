@@ -50,6 +50,13 @@ describe("消息列表 用例 Map<id, array>数据结构", () => {
     expect(notFindMessage).toEqual([]);
   });
 
+  it("lastMessage func 返回最后一条消息", () => {
+    const message = result.result.current.lastMessage("d000");
+    const notMessage = result.result.current.lastMessage("d011");
+    expect(message).toEqual({content: "vvvvvv", id: "a0" });
+    expect(notMessage).toEqual({});
+  });
+
   it("测试 existMessage func 是否正常运行", () => {
     const messages = result.result.current.existMessage({
       id: "d000",

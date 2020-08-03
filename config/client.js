@@ -20,4 +20,9 @@ export default {
    * 是否分析打包 应用包大小
    */
   bundleAnalyzerReport: process.env.npm_config_report,
+
+  /**
+   * cdn 路径
+   */
+  cdnPath: process.env.cdn_path || "https://cdn.linairx.top/",
 };
