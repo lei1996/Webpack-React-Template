@@ -4,29 +4,31 @@ import { useDrag } from "react-use-gesture";
 import { useSprings, animated } from "react-spring";
 import { css } from "linaria";
 
-css`
-  * {
-    box-sizing: border-box;
-  }
+// css`
+//   :global() {
+//     * {
+//       box-sizing: border-box;
+//     }
 
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    user-select: none;
-    font-family: "Raleway", sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #f0f0f0;
-    cursor: url("https://uploads.codesandbox.io/uploads/user/b3e56831-8b98-4fee-b941-0e27f39883ab/Ad1_-cursor.png")
-        39 39,
-      auto;
-  }
-`;
+//     html,
+//     body {
+//       margin: 0;
+//       padding: 0;
+//       height: 100%;
+//       width: 100%;
+//       overflow: hidden;
+//       user-select: none;
+//       font-family: "Raleway", sans-serif;
+//       display: flex;
+//       justify-content: center;
+//       align-items: center;
+//       background: #f0f0f0;
+//       cursor: url("https://uploads.codesandbox.io/uploads/user/b3e56831-8b98-4fee-b941-0e27f39883ab/Ad1_-cursor.png")
+//           39 39,
+//         auto;
+//     }
+//   }
+// `;
 
 const draggableMain = css`
   margin: 0;
@@ -105,37 +107,26 @@ function swap(array, moveIndex, toIndex) {
 }
 
 // Returns fitting styles for dragged/idle items
-const fn = (order, down, originalIndex, curIndex, y) => {
-  return (index) => {
-    console.log('fn function,index', index);
-    return down && index === originalIndex
-      ? {
-          y: curIndex * 100 + y,
-          scale: 1.1,
-          zIndex: "1",
-          shadow: 15,
-          immediate: (n) => n === "y" || n === "zIndex",
-        }
-      : {
-          y: order.indexOf(index) * 100,
-          scale: 1,
-          zIndex: "0",
-          shadow: 1,
-          immediate: false,
-        };
-  };
-};
+const fn = (order, down, originalIndex, curIndex, y) => (index) =>
+  down && index === originalIndex
+    ? {
+        y: curIndex * 100 + y,
+        zIndex: "1",
+        shadow: 15,
+        immediate: (n) => n === "y" || n === "zIndex",
+      }
+    : {
+        y: order.indexOf(index) * 100,
+        zIndex: "0",
+        shadow: 1,
+        immediate: false,
+      };
 
 export function DraggableList({ items }) {
   const order = useRef(items.map((_, index) => index)); // Store indicies as a local ref, this represents the item order
   const [springs, setSprings] = useSprings(items.length, fn(order.current)); // Create springs, each corresponds to an item, controlling its transform, scale, etc.
   const bind = useDrag(({ args: [originalIndex], down, movement: [x, y] }) => {
-    console.log("bind");
-    console.log(originalIndex);
-    console.log(down);
-    console.log(x, y);
     const curIndex = order.current.indexOf(originalIndex);
-    console.log(curIndex);
     const curRow = clamp(
       Math.round((curIndex * 100 + y) / 100),
       0,
@@ -149,7 +140,7 @@ export function DraggableList({ items }) {
   });
   return (
     <div className={content} style={{ height: items.length * 100 }}>
-      {springs.map(({ zIndex, shadow, y, scale }, i) => (
+      {springs.map(({ zIndex, y }, i) => (
         <animated.div
           {...bind(i)}
           key={i}
@@ -160,10 +151,10 @@ export function DraggableList({ items }) {
             //   (s) => `rgba(0, 0, 0, 0.15) 0px ${s}px ${2 * s}px 0px`
             // ),
             y,
-            scale,
           }}
-          children={items[i]}
-        />
+        >
+          {items[i]}
+        </animated.div>
       ))}
     </div>
   );
