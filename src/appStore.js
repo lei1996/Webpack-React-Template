@@ -1,4 +1,4 @@
-import React, { createContext } from "react";
+import { createContext } from "react";
 import { useLocalStore } from "mobx-react-lite";
 
 export const AppContext = createContext();
@@ -149,7 +149,7 @@ export const UserProvider = () => {
     isValidToken: () => {
       if (store.user.expiryTime === "") return false;
       let time = (new Date().getTime() / 1000) | 1;
-      return store.user.expiryTime > time ? true : false;
+      return Number(store.user.expiryTime) > Number(time);
     },
     // 初始化user
     clear: () => {

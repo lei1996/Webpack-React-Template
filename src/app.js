@@ -1,14 +1,16 @@
 import React, { useContext, useEffect } from "react";
 import { Router, Link } from "@reach/router";
-import { css } from "linaria";
 import { useObserver, observer, useLocalStore } from "mobx-react-lite";
 
 import { AppProvider, AppContext } from "./appStore";
+
+import { DraggableList } from "./components/draggable-list";
 
 const RouteNavs = () => {
   return (
     <>
       <Link to="/">Home</Link> | <Link to="/chat">Chat</Link> |{" "}
+      <Link to="/dragList">DragList</Link>
       <Link to="/messages">Messages</Link>
     </>
   );
@@ -39,16 +41,8 @@ const Movie = () => {
   ));
 };
 
-const Movie2 = () => {
-  const { moviesProvider } = useContext(AppContext);
-
-  return useObserver(() => (
-    <div>
-      <h2>Movies: {moviesProvider.movies}</h2>
-      <button onClick={moviesProvider.increment}>+</button>
-      <button onClick={moviesProvider.decrement}>-</button>
-    </div>
-  ));
+const DragList = () => {
+  return <DraggableList items={"Lorem ipsum dolor sit".split(" ")} />;
 };
 
 const Messages = () => {
@@ -76,21 +70,21 @@ const Messages = () => {
   ));
 };
 
-export const Counter1 = observer(props => {
+export const Counter1 = observer((props) => {
   const store = useLocalStore(() => ({
     count: props.initialCount,
     inc() {
-      store.count += 1
+      store.count += 1;
     },
-  }))
+  }));
 
   return (
     <div>
       <span>{store.count}</span>
       <button onClick={store.inc}>Increment</button>
     </div>
-  )
-})
+  );
+});
 
 function App() {
   const store = AppProvider();
@@ -103,6 +97,7 @@ function App() {
       <Router>
         <Count path="/" />
         <Movie path="/chat" />
+        <DragList path="/dragList" />
         <Messages path="/messages" />
       </Router>
     </AppContext.Provider>
