@@ -5,12 +5,13 @@ import { useObserver, observer, useLocalStore } from "mobx-react-lite";
 import { AppProvider, AppContext } from "./appStore";
 
 import { DraggableList } from "./components/draggable-list";
+import { Deck } from "./components/Deck";
 
 const RouteNavs = () => {
   return (
     <>
-      <Link to="/">Home</Link> | <Link to="/chat">Chat</Link> |{" "}
-      <Link to="/dragList">DragList</Link>
+      <Link to="/">Home</Link> | <Link to="/chat">Chat</Link> | 
+      <Link to="/dragList">DragList</Link> | <Link to="/deck">Deck</Link> | 
       <Link to="/messages">Messages</Link>
     </>
   );
@@ -43,6 +44,10 @@ const Movie = () => {
 
 const DragList = () => {
   return <DraggableList items={"Lorem ipsum dolor sit".split(" ")} />;
+};
+
+const DeckComponent = () => {
+  return <Deck />;
 };
 
 const Messages = () => {
@@ -98,6 +103,7 @@ function App() {
         <Count path="/" />
         <Movie path="/chat" />
         <DragList path="/dragList" />
+        <DeckComponent path="/deck" />
         <Messages path="/messages" />
       </Router>
     </AppContext.Provider>
