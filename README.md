@@ -7,7 +7,7 @@
 npm install
 
 # Run Server
-npm run dev-server
+npm run serve
 
 # Server run on http://localhost:8080/
 ```
